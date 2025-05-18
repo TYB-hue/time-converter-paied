@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="description" content="See live times in world capitals! Perfect for school projects and curious kids.">
+  <meta name="keywords" content="world clock for kids, timezone converter, live world time, TimeTravelKids, kids time learning">
+  <meta name="author" content="TimeTravelKids">
+  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>global time converter | times in world capitals | TimeTravelKids</title>
+</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon"/> 
+  <meta name="description" content="See live times in world capitals! Perfect for school projects and curious kids."/>
+
+  <!-- 1) Google AdSense loader (only once per page) -->
+  <script async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810027205872701"
+          crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.6.6/css/flag-icons.min.css"/>
+</head>
+<body>
+  <!-- ====== HEADER ADSENSE BANNER ====== -->
+  <header class="ad-banner">
+    <!-- Responsive display ad, In-article ad -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:680px;height:60px"
+         data-ad-client="ca-pub-3810027205872701"
+         data-ad-slot="6173525056"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </header>
+
+  <main class="container">
+    <h1>🌍 Live World Clock! ⏰</h1>
+    <p>Watch time move in real-time around the world!</p>
+
+    <!-- ====== INLINE AD UNIT ====== -->
+    <div class="ad-inline" style="text-align:center; margin:20px 0;">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:300px;height:250px"
+           data-ad-client="ca-pub-3810027205872701"
+           data-ad-slot="0987654321"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
+    <!-- ====== TIME CONVERTER ====== -->
+    <div class="converter-box colorful-box">
+      <h2 id="tcn">🧭 Time Converter</h2>
+      <div class="input-row">
+        <div class="input-group">
+          <label for="from-time" id="tcn">⏱️ Your Time:</label>
+          <div class="time-input-container">
+            <input type="time" id="from-time" value="12:00"/>
+            <button id="auto-time-btn">Use My Real Time 🔄</button>
+          </div>
+          <select id="from-tz">
+            <option value="local">🌐 My Time (Auto)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="to-tz" id="tcn">🌍 Compare With:</label>
+          <select id="to-tz"></select>
+        </div>
+      </div>
+      <button id="convert-btn" class="big-convert-btn">🎯 Convert Time!</button>
+      <div id="result">
+        <div class="time-result-block">
+          <h3>🏠 Your Time</h3>
+          <p id="local-time-output">--:--:--</p>
+        </div>
+        <div class="time-result-block">
+          <h3>🌍 Compared Time</h3>
+          <p id="target-time-output">--:--:--</p>
+          <p>
+            <span id="output-emoji"></span>
+            <span id="output-flag" class=""></span>
+            <span id="output-city"></span>
+          </p>
+        </div>
+        <div class="time-result-block">
+          <h3>🕒 Time Difference</h3>
+          <p id="time-diff-output">--</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MAP & FACTS ====== -->
+    <div id="world-map"></div>
+    <div class="fun-facts">
+      <h3>🗺️ Did You Know?</h3>
+      <p id="random-fact">France has 12 time zones—the most of any country!</p>
+    </div>
+  </main>
+
+  <!-- ====== FOOTER ====== -->
+  <footer>
+    <nav>
+      <a href="mailto:ahmed.pruo@gmail.com">Contact</a> |
+      <a href="privacy.html">Privacy Policy</a> |
+      <a href="terms.html">Terms of Service</a>
+    </nav>
+    <p>© 2024 TimeTravelKids.com | Watch time fly!</p>
+  </footer>
+
+  <!-- Leaflet & Your Script -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

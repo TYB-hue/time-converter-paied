@@ -1,70 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="description" content="See live times in world capitals! Perfect for school projects and curious kids.">
-  <meta name="keywords" content="world clock for kids, timezone converter, live world time, TimeTravelKids, kids time learning">
-  <meta name="author" content="TimeTravelKids">
-  
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>global time converter | times in world capitals | TimeTravelKids</title>
-  
-<link rel="icon" href="./world.jpg" type="image/jpg"/> 
- <meta name="description" content="See live times in world capitals! Perfect for school projects and curious kids."/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- 1) Google AdSense loader (only once per page) -->
-  <script async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810027205872701"
-          crossorigin="anonymous"></script>
+  <title>Global Time Converter | Times in World Capitals | TimeTravelKids</title>
 
-  <link rel="stylesheet" href="styles.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.6.6/css/flag-icons.min.css"/>
+  <meta name="description" content="See live times in world capitals! Perfect for school projects and curious kids." />
+  <meta name="keywords" content="world clock for kids, timezone converter, live world time, TimeTravelKids, kids time learning" />
+  <meta name="author" content="TimeTravelKids" />
+  <link rel="canonical" href="https://timetravelkids.com" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Live World Clock for Kids | TimeTravelKids" />
+  <meta property="og:description" content="Compare world times in real-time! Great for kids and school projects." />
+  <meta property="og:image" content="https://timetravelkids.com/og-image.jpg" />
+  <meta property="og:url" content="https://timetravelkids.com" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Live World Clock for Kids | TimeTravelKids" />
+  <meta name="twitter:description" content="Compare world times in real-time! Great for kids and school projects." />
+  <meta name="twitter:image" content="https://timetravelkids.com/twitter-image.jpg" />
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "TimeTravelKids",
+    "url": "https://timetravelkids.com",
+    "description": "Live world clock for kids. Learn about time zones and compare global times easily.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "TimeTravelKids"
+    }
+  }
+  </script>
+
+  <link rel="icon" href="./world.jpg" type="image/jpg" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.6.6/css/flag-icons.min.css" />
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810027205872701" crossorigin="anonymous"></script>
 </head>
+
 <body>
-  <!-- ====== HEADER ADSENSE BANNER ====== -->
+  <!-- Header Ad Banner -->
   <header class="ad-banner">
-    <!-- Responsive display ad, In-article ad -->
     <ins class="adsbygoogle"
          style="display:inline-block;width:680px;height:60px"
          data-ad-client="ca-pub-3810027205872701"
          data-ad-slot="6173525056"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </header>
 
   <main class="container">
     <h1>🌍 Live World Clock! ⏰</h1>
     <p>Watch time move in real-time around the world!</p>
 
-    <!-- ====== INLINE AD UNIT ====== -->
+    <!-- Inline Ad -->
     <div class="ad-inline" style="text-align:center; margin:20px 0;">
       <ins class="adsbygoogle"
            style="display:inline-block;width:300px;height:250px"
            data-ad-client="ca-pub-3810027205872701"
            data-ad-slot="0987654321"></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <!-- ====== TIME CONVERTER ====== -->
+    <!-- Time Converter Section -->
     <div class="converter-box colorful-box">
-      <h2 id="tcn">🧭 Time Converter</h2>
+      <h2>🧭 Time Converter</h2>
       <div class="input-row">
         <div class="input-group">
           <label for="from-time" id="tcn">⏱️ Your Time:</label>
           <div class="time-input-container">
-            <input type="time" id="from-time" value="12:00"/>
+            <input type="time" id="from-time" value="12:00" />
             <button id="auto-time-btn">Use My Real Time 🔄</button>
           </div>
           <select id="from-tz">
-            <option value="local">🌐 My Time (Auto)</option>
+            <option value="local"  id="tcn">🌐 My Time (Auto)</option>
           </select>
         </div>
         <div class="input-group">
-          <label for="to-tz" id="tcn">🌍 Compare With:</label>
+          <label for="to-tz">🌍 Compare With:</label>
           <select id="to-tz"></select>
         </div>
       </div>
@@ -90,7 +112,8 @@
       </div>
     </div>
 
-    <!-- ====== MAP & FACTS ====== -->
+    <!-- World Map & Facts -->
+    <h2>🌐 World Map & Time Facts</h2>
     <div id="world-map"></div>
     <div class="fun-facts">
       <h3>🗺️ Did You Know?</h3>
@@ -98,7 +121,13 @@
     </div>
   </main>
 
-  <!-- ====== FOOTER ====== -->
+  <!-- SEO Keyword Boosting Section (The "Arrival") -->
+  <section class="arrival-keywords" style="padding: 30px; background: #f9f9f9;">
+    <h2>📈 Trending Time Zone Topics</h2>
+    <p>Looking for the current time in Tokyo? Want to convert New York to London time fast? Our time converter for kids helps you see time differences like magic. Popular searches: <strong>live world clock</strong>, <strong>what time is it in Paris</strong>, <strong>convert CST to EST</strong>, <strong>interactive timezone map for students</strong>, <strong>GMT vs local time</strong>, <strong>time difference calculator for school projects</strong>, <strong>fun time zone facts for kids</strong>, and more!</p>
+  </section>
+
+  <!-- Footer -->
   <footer>
     <nav>
       <a href="mailto:ahmed.pruo@gmail.com">Contact</a> |
@@ -108,8 +137,8 @@
     <p>© 2024 TimeTravelKids.com | Watch time fly!</p>
   </footer>
 
-  <!-- Leaflet & Your Script -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="script.js"></script>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>

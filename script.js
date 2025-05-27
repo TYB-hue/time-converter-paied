@@ -188,6 +188,9 @@ const worldCapitals = [ { name: "Tokyo", country: "Japan", tz: "Asia/Tokyo", fla
     { name: "Zagreb", country: "Croatia", tz: "Europe/Zagreb", flag: "hr", lat: 45.81, lon: 15.98 }
   ];
 
+
+
+ 
   worldCapitals.forEach(capital => {
     const { country, name } = capital;
     capital.name = `${country} (${name})`;
@@ -200,164 +203,265 @@ const worldCapitals = [ { name: "Tokyo", country: "Japan", tz: "Asia/Tokyo", fla
 
 // ─── 1) Helpers for time-zone conversions ─────────────────────────────────────
 function getTimeInZone(zone, baseDate = new Date()) {
-    // Convert baseDate into a string in that zone, then back to Date
+  try {
     const localeStr = baseDate.toLocaleString("en-US", { timeZone: zone });
     return new Date(localeStr);
+  } catch (error) {
+    console.error(`Error converting time for zone: ${zone}`, error);
+    return baseDate;
   }
-  
-  function getOffsetHours(zone) {
-    const now     = new Date();
+}
+
+function getOffsetHours(zone) {
+  try {
+    const now = new Date();
     const localMs = now.getTime();
-    const zoneMs  = getTimeInZone(zone, now).getTime();
-    // adjust for local UTC offset
+    const zoneMs = getTimeInZone(zone, now).getTime();
     return (zoneMs - localMs + now.getTimezoneOffset() * 60000) / 3600000;
+  } catch (error) {
+    console.error(`Error calculating offset for zone: ${zone}`, error);
+    return 0;
   }
+}
+
+function formatTimeWithSeconds(date) {
+  return date.toLocaleTimeString('en-US', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+}
+
+// ─── 2) Search functionality ────────────────────────────────────────────────────
+function performSearch(searchInput, select) {
+  const searchTerm = searchInput.value.toLowerCase().trim();
   
-  
-  // ─── 2) Populate the "from" and "to" dropdowns ────────────────────────────────
-  function initDropdowns() {
-    const fromTz = document.getElementById("from-tz");
-    const toTz   = document.getElementById("to-tz");
-    worldCapitals.forEach(city => {
-        const flagEmoji = city.flag
-          .toUpperCase()
-          .match(/../g)
-          .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
-          .join("");
-      
-        const text = `${flagEmoji} ${city.name} (${city.country})`;
-      
-        const opt1 = new Option(text, city.tz);
-        const opt2 = new Option(text, city.tz);
-      
-        // Set Japan as default for "Compare With"
-        if (city.tz === "Asia/Tokyo") {
-          opt2.selected = true;
-        }
-      
-        fromTz.add(opt1);
-        toTz.add(opt2);
-      });
-      
-  
-    // Select first real city by default in "to" dropdown
-    if (toTz.options.length > 1) {
-    
-    }
-  }
-  
-  
-  // ─── 3) One-shot conversion on button click ───────────────────────────────────
-  function doConversion() {
-    clearInterval(liveUpdateInterval); // <── ADD THIS LINE
-  
-    const fromZone = document.getElementById("from-tz").value;
-    const toZone   = document.getElementById("to-tz").value;
-    if (!toZone) return alert("Please choose a city to compare with!");
-  
-    const manual = document.getElementById("from-time").value;
-    const [h, m] = manual.split(":").map(Number);
-  
-    let base = new Date();
-    if (!useAutoTime) {
-      base.setHours(h, m, 0, 0);
-    }
-  
-    const realFromZone = fromZone === "local"
-      ? Intl.DateTimeFormat().resolvedOptions().timeZone
-      : fromZone;
-  
-    const dateFrom = getTimeInZone(realFromZone, base);
-    const dateTo   = getTimeInZone(toZone, base);
-  
-    const fmt = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true };
-    document.getElementById("local-time-output").textContent  = dateFrom.toLocaleTimeString("en-US", fmt);
-    document.getElementById("target-time-output").textContent = dateTo.toLocaleTimeString("en-US", fmt);
-  
-    const diff = Math.round(getOffsetHours(toZone) - getOffsetHours(realFromZone));
-    let diffText = "Same time!";
-    if (diff > 0) diffText = `${diff} hour(s) ahead`;
-    if (diff < 0) diffText = `${Math.abs(diff)} hour(s) behind`;
-    document.getElementById("time-diff-output").textContent = diffText;
-  
-    // Update emoji + city only in manual mode
-    document.getElementById("output-emoji").textContent = (dateTo.getHours() >= 6 && dateTo.getHours() < 18) ? "🌞" : "🌙";
-    const selectedCity = worldCapitals.find(c => c.tz === toZone);
-    if (selectedCity) {
-      document.getElementById("output-flag").className   = `fi fi-${selectedCity.flag}`;
-      document.getElementById("output-city").textContent = selectedCity.name;
-    }
-  }
-  
-  
-  
-  // ─── 4) Live updates when clicking on map ─────────────────────────────────────
-  function startLiveUpdate(zone, cityName, flagCode) {
-    clearInterval(liveUpdateInterval);
-  
-    function tick() {
-      const manual = document.getElementById("from-time").value;
-      const [h, m] = manual.split(":").map(Number);
-      let base    = new Date();
-      if (!useAutoTime) base.setHours(h, m, 0, 0);
-  
-      const fromZone = document.getElementById("from-tz").value;
-      const realFrom = fromZone === "local"
-        ? Intl.DateTimeFormat().resolvedOptions().timeZone
-        : fromZone;
-  
-      const dateFrom = getTimeInZone(realFrom, base);
-      const dateTo   = getTimeInZone(zone,    base);
-  
-      const fmt = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true };
-      document.getElementById("local-time-output").textContent  = dateFrom.toLocaleTimeString("en-US", fmt);
-      document.getElementById("target-time-output").textContent = dateTo.toLocaleTimeString("en-US", fmt);
-  
-      const diff = Math.round(getOffsetHours(zone) - getOffsetHours(realFrom));
-      let diffText = diff === 0
-        ? "Same time!"
-        : diff > 0
-          ? `${diff} hour(s) ahead`
-          : `${Math.abs(diff)} hour(s) behind`;
-      document.getElementById("time-diff-output").textContent = diffText;
-  
-      document.getElementById("output-emoji").textContent = (dateTo.getHours() >= 6 && dateTo.getHours() < 18) ? "🌞" : "🌙";
-      document.getElementById("output-flag").className   = `fi fi-${flagCode}`;
-      document.getElementById("output-city").textContent = cityName;
-    }
-  
-    tick();
-    liveUpdateInterval = setInterval(tick, 1000);
-  }
-  
-  
-  // ─── 5) Initialize map and event hooks ────────────────────────────────────────
-  function initMap() {
-    const map = L.map("world-map").setView([20, 0], 2);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-  
-    worldCapitals.forEach(city => {
-      L.marker([city.lat, city.lon])
-        .bindPopup(`${city.name}, ${city.country}`)
-        .on("click", () => startLiveUpdate(city.tz, city.name, city.flag))
-        .addTo(map);
-    });
-  }
-  
-  document.addEventListener("DOMContentLoaded", () => {
+  // If search is empty, reset the dropdown
+  if (!searchTerm) {
     initDropdowns();
-    initMap();
+    return;
+  }
+
+  // Store the original options if we haven't already
+  if (!select._originalOptions) {
+    select._originalOptions = Array.from(select.options);
+  }
+
+  // Reset options to original state
+  while (select.options.length > 0) {
+    select.remove(0);
+  }
+
+  // Filter and add matching options
+  const matchingOptions = select._originalOptions.filter(option => {
+    const text = option.text.toLowerCase();
+    return text.startsWith(searchTerm) || 
+           text.includes(` ${searchTerm}`) || 
+           text.includes(`-${searchTerm}`);
+  });
+
+  // Add matching options back to select
+  matchingOptions.forEach(option => {
+    select.add(new Option(option.text, option.value));
+  });
+
+  // Show "no results" message if no matches found
+  if (matchingOptions.length === 0) {
+    const noResults = new Option("No matches found", "");
+    noResults.disabled = true;
+    select.add(noResults);
+  }
+}
+
+function setupSearch(searchInput, select) {
+  const searchButton = searchInput.nextElementSibling;
   
-    // Default: live-update Tokyo at load
-    const tokyo = worldCapitals.find(c => c.tz === "Asia/Tokyo");
-    startLiveUpdate(tokyo.tz, tokyo.name, tokyo.flag);
+  // Handle search button click
+  searchButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    performSearch(searchInput, select);
+  });
+
+  // Handle Enter key in search input
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      performSearch(searchInput, select);
+    }
+  });
+
+  // Reset on empty search
+  searchInput.addEventListener('input', () => {
+    if (!searchInput.value) {
+      initDropdowns();
+    }
+  });
+}
+
+// ─── 3) Populate the "from" and "to" dropdowns ────────────────────────────────
+function initDropdowns() {
+  const fromTz = document.getElementById("from-tz");
+  const toTz = document.getElementById("to-tz");
+  const fromSearch = document.getElementById("from-tz-search");
+  const toSearch = document.getElementById("to-tz-search");
+
+  // Clear existing options except the first one in fromTz
+  while (fromTz.options.length > 1) {
+    fromTz.remove(1);
+  }
+  while (toTz.options.length > 0) {
+    toTz.remove(0);
+  }
+
+  // Sort capitals by country name
+  worldCapitals.sort((a, b) => a.country.localeCompare(b.country));
+
+  worldCapitals.forEach(city => {
+    const flagEmoji = city.flag
+      .toUpperCase()
+      .match(/../g)
+      .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
+      .join("");
+
+    const text = `${flagEmoji} ${city.country} - ${city.name}`;
+    const opt1 = new Option(text, city.tz);
+    const opt2 = new Option(text, city.tz);
+
+    fromTz.add(opt1);
+    toTz.add(opt2);
+  });
+
+  // Set a default selection for "to" timezone (e.g., London)
+  const defaultTz = worldCapitals.find(city => city.name === "London");
+  if (defaultTz) {
+    toTz.value = defaultTz.tz;
+  }
+
+  // Setup search functionality
+  setupSearch(fromSearch, fromTz);
+  setupSearch(toSearch, toTz);
+}
+
+// ─── 4) Time conversion and display ───────────────────────────────────────────
+function updateTime() {
+  const fromTz = document.getElementById("from-tz").value;
+  const toTz = document.getElementById("to-tz").value;
+  const fromTimeInput = document.getElementById("from-time").value;
+
+  let baseDate = new Date();
+  if (!useAutoTime && fromTimeInput) {
+    const [hours, minutes] = fromTimeInput.split(':');
+    baseDate.setHours(parseInt(hours), parseInt(minutes), 0);
+  }
+
+  try {
+    // Get times in both zones
+    const fromTime = fromTz === 'local' ? baseDate : getTimeInZone(fromTz, baseDate);
+    const toTime = getTimeInZone(toTz, baseDate);
+
+    // Calculate time difference and round to nearest hour
+    const diffHours = getOffsetHours(toTz) - (fromTz === 'local' ? 0 : getOffsetHours(fromTz));
+    const roundedDiff = Math.round(diffHours);
+    let diffFormatted;
+    
+    if (roundedDiff === 0) {
+      diffFormatted = 'Same time zone';
+    } else {
+      diffFormatted = `${Math.abs(roundedDiff)} hour${Math.abs(roundedDiff) !== 1 ? 's' : ''} ${roundedDiff > 0 ? 'ahead' : 'behind'}`;
+    }
+
+    // Update display
+    document.getElementById("local-time-output").textContent = formatTimeWithSeconds(fromTime);
+    document.getElementById("target-time-output").textContent = formatTimeWithSeconds(toTime);
+    document.getElementById("time-diff-output").textContent = diffFormatted;
+
+    // Update destination city info
+    const selectedCity = worldCapitals.find(city => city.tz === toTz);
+    if (selectedCity) {
+      document.getElementById("output-city").textContent = `${selectedCity.name}, ${selectedCity.country}`;
+      document.getElementById("output-flag").className = `fi fi-${selectedCity.flag}`;
+    }
+
+    // Update local city info
+    if (fromTz === 'local') {
+      // Try to get the local city based on the browser's timezone
+      const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const localCity = worldCapitals.find(city => city.tz === localTz) || 
+                       worldCapitals.find(city => localTz.includes(city.tz.split('/')[1]));
+      
+      if (localCity) {
+        document.getElementById("local-city").textContent = `${localCity.name}, ${localCity.country}`;
+        document.getElementById("local-flag").className = `fi fi-${localCity.flag}`;
+      } else {
+        // Fallback to a generic message if we can't determine the exact city
+        document.getElementById("local-city").textContent = `Your Location (${localTz})`;
+        // Try to get country code from the timezone
+        const countryCode = localTz.split('/')[1]?.substring(0, 2).toLowerCase();
+        if (countryCode) {
+          document.getElementById("local-flag").className = `fi fi-${countryCode}`;
+        }
+      }
+    } else {
+      const fromCity = worldCapitals.find(city => city.tz === fromTz);
+      if (fromCity) {
+        document.getElementById("local-city").textContent = `${fromCity.name}, ${fromCity.country}`;
+        document.getElementById("local-flag").className = `fi fi-${fromCity.flag}`;
+      }
+    }
+  } catch (error) {
+    console.error('Error updating time:', error);
+  }
+}
+
+// ─── 5) Event Listeners and Initialization ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initDropdowns();
   
-    document.getElementById("convert-btn").addEventListener("click", doConversion);
-    document.getElementById("auto-time-btn").addEventListener("click", () => {
-      useAutoTime = true;
-      document.getElementById("from-time").value = new Date().toTimeString().slice(0,5);
-    });
-    document.getElementById("from-time").addEventListener("change", () => {
-      useAutoTime = false;
+  // Setup auto-update button
+  const autoTimeBtn = document.getElementById("auto-time-btn");
+  autoTimeBtn.addEventListener('click', () => {
+    useAutoTime = true;
+    document.getElementById("from-time").value = new Date().toTimeString().slice(0, 5);
+    updateTime();
+  });
+
+  // Setup manual time input
+  document.getElementById("from-time").addEventListener('change', () => {
+    useAutoTime = false;
+    updateTime();
+  });
+
+  // Setup timezone change handlers
+  document.getElementById("from-tz").addEventListener('change', updateTime);
+  document.getElementById("to-tz").addEventListener('change', updateTime);
+
+  // Setup convert button
+  document.getElementById("convert-btn").addEventListener('click', updateTime);
+
+  // Initial update
+  updateTime();
+
+  // Start live updates
+  setInterval(updateTime, 1000);
+});
+
+// Initialize the map if it exists
+if (document.getElementById('world-map')) {
+  const map = L.map('world-map').setView([20, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Add markers for all capitals
+  worldCapitals.forEach(city => {
+    const marker = L.marker([city.lat, city.lon])
+      .addTo(map)
+      .bindPopup(`${city.name}, ${city.country}`);
+
+    marker.on('click', () => {
+      document.getElementById('to-tz').value = city.tz;
+      updateTime();
     });
   });
+}

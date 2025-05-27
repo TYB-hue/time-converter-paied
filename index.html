@@ -4,37 +4,51 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Global Time Converter | Times in World Capitals | TimeTravelKids</title>
+  <title>Global Time Zone Converter | International Travel & Business Time Tool</title>
 
-  <meta name="description" content="See live times in world capitals! Perfect for school projects and curious kids." />
-  <meta name="keywords" content="world clock for kids, timezone converter, live world time, TimeTravelKids, kids time learning" />
-  <meta name="author" content="TimeTravelKids" />
+  <meta name="description" content="Professional time zone converter for international travelers and business professionals. Compare times across 200+ cities, plan meetings, and manage travel schedules with real-time updates." />
+  <meta name="keywords" content="time zone converter, international travel time, business meeting planner, world clock, global time zones, travel planning tool, international business time, world time converter" />
+  <meta name="author" content="TimeZoneTravel" />
   <link rel="canonical" href="https://timetravelkids.com" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Live World Clock for Kids | TimeTravelKids" />
-  <meta property="og:description" content="Compare world times in real-time! Great for kids and school projects." />
+  <meta property="og:title" content="Professional Time Zone Converter | Global Business & Travel Tool" />
+  <meta property="og:description" content="Plan international travel and business meetings with our professional time zone converter. Real-time updates across 200+ major cities worldwide." />
   <meta property="og:image" content="https://timetravelkids.com/og-image.jpg" />
   <meta property="og:url" content="https://timetravelkids.com" />
   <meta property="og:type" content="website" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Live World Clock for Kids | TimeTravelKids" />
-  <meta name="twitter:description" content="Compare world times in real-time! Great for kids and school projects." />
+  <meta name="twitter:title" content="Professional Time Zone Converter | Global Business & Travel Tool" />
+  <meta name="twitter:description" content="Plan international travel and business meetings with our professional time zone converter. Real-time updates across 200+ major cities worldwide." />
   <meta name="twitter:image" content="https://timetravelkids.com/twitter-image.jpg" />
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "TimeTravelKids",
+    "@type": "WebApplication",
+    "name": "TimeZoneTravel",
     "url": "https://timetravelkids.com",
-    "description": "Live world clock for kids. Learn about time zones and compare global times easily.",
+    "description": "Professional time zone converter for international travelers and business professionals. Features real-time updates, interactive world map, and support for over 200 cities worldwide.",
+    "applicationCategory": "Travel Tool, Business Tool",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "features": [
+      "Real-time time zone conversion",
+      "Interactive world map",
+      "200+ major cities supported",
+      "Business meeting planner",
+      "Travel time management"
+    ],
     "publisher": {
       "@type": "Organization",
-      "name": "TimeTravelKids"
+      "name": "TimeZoneTravel",
+      "description": "Professional time management solutions for international business and travel"
     }
   }
   </script>
@@ -43,98 +57,167 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.6.6/css/flag-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3810027205872701" crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <!-- Header Ad Banner -->
-  <header class="ad-banner">
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:680px;height:60px"
-         data-ad-client="ca-pub-3810027205872701"
-         data-ad-slot="6173525056"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-content">
+      <h1>Global Time Zone Converter</h1>
+      <p class="subtitle">Professional time management for international travelers</p>
+    </div>
   </header>
 
   <main class="container">
-    <h1>🌍 Live World Clock! ⏰</h1>
-    <p>Watch time move in real-time around the world!</p>
-
-    <!-- Inline Ad -->
-    <div class="ad-inline" style="text-align:center; margin:20px 0;">
-      <ins class="adsbygoogle"
-           style="display:inline-block;width:300px;height:250px"
-           data-ad-client="ca-pub-3810027205872701"
-           data-ad-slot="0987654321"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-
     <!-- Time Converter Section -->
-    <div class="converter-box colorful-box">
-      <h2 id="tcn">🧭 Time Converter</h2>
+    <div class="converter-box">
+      <h2>Time Zone Converter</h2>
       <div class="input-row">
         <div class="input-group">
-          <label for="from-time" id="tcn">⏱️ Your Time:</label>
+          <label for="from-time">Local Time</label>
           <div class="time-input-container">
             <input type="time" id="from-time" value="12:00" />
-            <button id="auto-time-btn">Use My Real Time 🔄</button>
+            <button id="auto-time-btn" class="secondary-button">Use Current Time</button>
           </div>
-          <select id="from-tz">
-            <option value="local"  id="tcn">🌐 My Time (Auto)</option>
-          </select>
+          <div class="select-search-container">
+            <div class="search-input-group">
+              <input type="text" class="timezone-search" id="from-tz-search" placeholder="Search location..." />
+              <button class="search-button" id="from-tz-search-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </button>
+            </div>
+            <select id="from-tz" class="searchable-select">
+              <option value="local">Current Location (Auto)</option>
+            </select>
+          </div>
         </div>
         <div class="input-group">
-          <label for="to-tz" id="tcn">🌍 Compare With:</label>
-          <select id="to-tz"></select>
+          <label for="to-tz">Destination Time Zone</label>
+          <div class="select-search-container">
+            <div class="search-input-group">
+              <input type="text" class="timezone-search" id="to-tz-search" placeholder="Search destination..." />
+              <button class="search-button" id="to-tz-search-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </button>
+            </div>
+            <select id="to-tz" class="searchable-select"></select>
+          </div>
         </div>
       </div>
-      <button id="convert-btn" class="big-convert-btn">🎯 Convert Time!</button>
-      <div id="result">
+      <button id="convert-btn" class="primary-button">Convert Time</button>
+      <div id="result" class="result-container">
         <div class="time-result-block">
-          <h3>🏠 Your Time</h3>
+          <h3>Local Time</h3>
           <p id="local-time-output">--:--:--</p>
+          <p class="destination-info">
+            <span id="local-flag" class=""></span>
+            <span id="local-city"></span>
+          </p>
         </div>
         <div class="time-result-block">
-          <h3>🌍 Compared Time</h3>
+          <h3>Destination Time</h3>
           <p id="target-time-output">--:--:--</p>
-          <p>
-            <span id="output-emoji"></span>
+          <p class="destination-info">
             <span id="output-flag" class=""></span>
             <span id="output-city"></span>
           </p>
         </div>
         <div class="time-result-block">
-          <h3>🕒 Time Difference</h3>
+          <h3>Time Difference</h3>
           <p id="time-diff-output">--</p>
         </div>
       </div>
     </div>
 
-    <!-- World Map & Facts -->
-    <h2>🌐 World Map & Time Facts</h2>
-    <div id="world-map"></div>
-    <div class="fun-facts">
-      <h3>🗺️ Did You Know?</h3>
-      <p id="random-fact">France has 12 time zones—the most of any country!</p>
-    </div>
+    <!-- Interactive Map Section -->
+    <section class="map-section">
+      <h2>Interactive World Time Map</h2>
+      <div id="world-map"></div>
+      <div class="map-info">
+        <p>Click on any location to see local time and add to comparison</p>
+      </div>
+    </section>
+
+    <!-- Travel Planning Tips -->
+    <section class="travel-tips">
+      <h2>International Travel & Business Planning Tips</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <h3>Jet Lag Management</h3>
+          <p>Adjust your schedule gradually 2-3 days before travel. Stay hydrated and try to sleep according to your destination's time zone during long flights.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Business Meeting Planning</h3>
+          <p>Consider common working hours and lunch breaks when scheduling international meetings. Account for daylight saving time changes in different regions.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Flight Planning</h3>
+          <p>Calculate arrival times accurately by considering time zone changes. Plan layovers with sufficient buffer time for potential delays and immigration procedures.</p>
+        </div>
+        <div class="tip-card">
+          <h3>Remote Team Coordination</h3>
+          <p>Use this tool to find optimal meeting times that work across different time zones for your global team members.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- SEO Keyword Boosting Section (The "Arrival") -->
-  <section class="arrival-keywords" style="padding: 30px; background: #f9f9f9;">
-    <h2>📈 Trending Time Zone Topics</h2>
-    <p>Looking for the current time in Tokyo? Want to convert New York to London time fast? Our time converter for kids helps you see time differences like magic. Popular searches: <strong>live world clock</strong>, <strong>what time is it in Paris</strong>, <strong>convert CST to EST</strong>, <strong>interactive timezone map for students</strong>, <strong>GMT vs local time</strong>, <strong>time difference calculator for school projects</strong>, <strong>fun time zone facts for kids</strong>, and more!</p>
+  <!-- SEO Enhancement Section -->
+  <section class="seo-content">
+    <div class="container">
+      <h2>Professional Time Zone Management Resources</h2>
+      <div class="resource-grid">
+        <article>
+          <h3>Global Business Time Management</h3>
+          <p>Optimize your international business operations with precise time conversion across major financial hubs including New York, London, Tokyo, Singapore, and Dubai. Perfect for coordinating global team meetings and client calls.</p>
+        </article>
+        <article>
+          <h3>International Meeting Scheduler</h3>
+          <p>Find the perfect time for international conference calls and virtual meetings. Our tool helps you consider working hours across different time zones to ensure maximum participation.</p>
+        </article>
+        <article>
+          <h3>Travel Time Management</h3>
+          <p>Plan your international flights, layovers, and arrival times with precision. Account for time zone changes to minimize jet lag and maximize productivity during business travel.</p>
+        </article>
+        <article>
+          <h3>World Time Zones Guide</h3>
+          <p>Access comprehensive information about time zones worldwide, including daylight saving time changes, standard time offsets, and local business hours in major cities.</p>
+        </article>
+      </div>
+    </div>
   </section>
 
   <!-- Footer -->
-  <footer>
-    <nav>
-      <a href="mailto:ahmed.pruo@gmail.com">Contact</a> |
-      <a href="privacy.html">Privacy Policy</a> |
-      <a href="terms.html">Terms of Service</a>
-    </nav>
-    <p>© 2024 TimeTravelKids.com | Watch time fly!</p>
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>About Us</h4>
+          <p>Professional time zone conversion tools for international travelers and business professionals.</p>
+        </div>
+        <nav class="footer-nav">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="mailto:ahmed.pruo@gmail.com">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 TimeZoneTravel | Professional Time Zone Solutions</p>
+      </div>
+    </div>
   </footer>
 
   <!-- Scripts -->
